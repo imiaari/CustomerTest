@@ -48,9 +48,8 @@ public class CustomerService {
 			throw new ApplicationException("Invalid Phone number.");
 		}
 		try {
-
-			Customer customer = new Customer(null, customerDTO.getName(), customerDTO.getAddress(),
-					customerDTO.getMobileNumber());
+			Customer customer = new Customer(customerDTO.getId() != null ? customerDTO.getId() : null,
+					customerDTO.getName(), customerDTO.getAddress(), customerDTO.getMobileNumber());
 
 			customerRepository.save(customer);
 		} catch (Exception e) {
@@ -73,13 +72,10 @@ public class CustomerService {
 		log.debug("updating customer: " + customerDTO.toString());
 		try {
 
-			Customer customer = customerRepository.findById(id)
-					.orElseThrow(() -> new IllegalArgumentException("Invalid customer ID"));
+			customerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid customer ID"));
 
-			customer = new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(),
-					customerDTO.getMobileNumber());
+			addCustomer(customerDTO);
 
-			customerRepository.save(customer);
 		} catch (Exception e) {
 			log.error("Error while updating customer: " + customerDTO.getId(), e);
 			throw new ApplicationException("Error while updating customer: " + customerDTO.getId(), e);
